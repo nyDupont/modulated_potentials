@@ -77,7 +77,7 @@ def hamiltonian_amp_phase_mod_adim(w, t, param, a=1, dphi=pi/2):
 
 # Potential of the system : "amplitude and phase modulated" (dimensionless)
 def potential_amp_phase_mod_adim(x, t, param, a=1, dphi=pi/2):
-    g, e, phi = param[0]  # unpacking potential parameters
+    g, e, phi = param  # unpacking potential parameters
     phi_0 = -phi*cos(dphi)  # a dependent parameter
 
     return -g*(1+e*cos(t)) * cos(x + phi*cos(a*t + dphi) + phi_0)
@@ -99,3 +99,10 @@ def pendulum_amp_phase_mod_adim(w, t, param):
     f = [p,
          -g*(1+e*cos(t)) * sin(x + phi*cos(a*t+dphi) + phi_0)]
     return f
+
+
+def force_pendulum_amp_phas_mod_adim(x, t, param, a=1, dphi=pi/2):
+    g, e, phi = param  # unpacking potential parameters
+    phi_0 = -phi * cos(dphi)  # a dependent parameter
+
+    return -g * (1 + e*cos(t)) * sin(x + phi*cos(a*t+dphi) + phi_0)

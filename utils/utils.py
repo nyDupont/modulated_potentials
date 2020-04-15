@@ -5,7 +5,10 @@ from integrators.rk4 import rk4
 
 # An explicit resolution function
 def resolution(system, w0, vect_t, param, integrateur=rk4, **kwargs):
-    w_sol = integrateur(system, w0, vect_t, param, kwargs)
+    if len(kwargs) != 0:
+        w_sol = integrateur(system, w0, vect_t, param, kwargs)
+    else:
+        w_sol = integrateur(system, w0, vect_t, param)
     return w_sol[:, 0], w_sol[:, 1]
 
 
