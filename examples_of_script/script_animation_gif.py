@@ -6,6 +6,7 @@ bool_latex_style = 1  # for the plot to be edited in latex serif
 bool_show = 1
 bool_complition_percentage = 0
 bool_save = 0
+path = './results/gif/source_pictures/picture_'
 dpi = 80
 
 # system
@@ -20,7 +21,7 @@ xpv_space_frequency = 2  # ploting a position or momentum or potential point eve
 time_frame_frequency = 8  # idem in time
 
 # time vector
-nper = 4
+nper = 3
 ndt = 1000  # plays here a special role on animation speed
 tf = nper*2*pi  # dimensionless final time
 vect_t = linspace(0, tf, round(nper*ndt))  # time vector
@@ -121,7 +122,7 @@ for i in range(1, round(nper*ndt) - 1, time_frame_frequency):
     p2.set_data(x_i, p_i)
 
     if bool_save:
-        plt.savefig('gif/source_pictures/picture_' + str(j), dpi=dpi)
+        plt.savefig(path + str(j), dpi=dpi)
     if bool_complition_percentage:
         # stdout.write(str(int(j/nbre_points_temps*10000*freq_trace_temporel)/100) + '%')
         print(str(int(j / nper*ndt * 10000 * time_frame_frequency) / 100) + '%')
