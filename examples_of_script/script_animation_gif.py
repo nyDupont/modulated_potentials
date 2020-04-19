@@ -30,16 +30,16 @@ nb_space_points = 1000  # space sampling to plot the potential
 V = zeros((nb_space_points, round(nper*ndt)))  # definition of an array to store the V(x,t)
 
 # solving the DE
-x_sol, p_sol = resolution(pendulum_amp_phase_mod_adim, (0, 0), vect_t, param, a=a, dphi=dphi)
+x_sol, p_sol = resolution(pendulum_amp_phase_mod_adim, (0, 0), vect_t, (g, eps, phi, a, dphi))
 x_f = x_sol[-1]
 x_sol_translated = [x - x_f/2 for x in x_sol]  # translating the solution for the particle to go through all screen
 
-v_sol_adim = potential_amp_phase_mod_adim(x_sol, vect_t, param)  # potential V(x,t) experienced by the particle
+v_sol_adim = potential_amp_phase_mod_adim(x_sol, vect_t, (g, eps, phi, a, dphi))  # potential V(x,t) experienced by the particle
 vect_x = linspace(-0.5*x_f, 1.51*x_f, nb_space_points)  # vect_x to plot potentials
 vect_x_translated = [x - x_f/2 for x in vect_x]  # translating it as it has been done for x
 
 for i in range(round(nper*ndt)):
-    V[:, i] = potential_amp_phase_mod_adim(vect_x, vect_t[i], param)  # evalutaed in vect_x but to be plotted translated
+    V[:, i] = potential_amp_phase_mod_adim(vect_x, vect_t[i], (g, eps, phi, a, dphi))  # evalutaed in vect_x but to be plotted translated
 
 # definition of useful variables for the graphs
 x_0, p_0, v_0, v_max = x_sol_translated[0], p_sol[0], v_sol_adim[0], max(V[:, 0])
