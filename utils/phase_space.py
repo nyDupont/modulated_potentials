@@ -1,5 +1,6 @@
-from numpy import linspace
-from utils.physics_systems import *
+from numpy import linspace, pi, zeros
+from random import random
+from integrators.rk4 import rk4
 from utils.utils import resolution
 from utils.math_functions import asig_sampling
 
@@ -29,7 +30,7 @@ def phase_space(system, param, xmin, xmax, pmin, pmax, nx, np, nper,
     xmodulo, pmodulo : floats to be specified if one wants to fold the PS on itself, for instance when the system is
                        xmodulo-periodic in x and/or pmodulo-periodic in p (i.e. invariant by such discrete translations)
                        along those axis, Note: has not yet been implemented along the p-axis.
-    sampling : string, o
+    sampling : string, ['rect', 'diag', 'rand']
     sampling_density : string, to switch from a constant sampling density to a arc-sigmoidal sampling density, getting
                        more CI arround the center of the PS. Options are ['const', 'asig'],
     sampling_amp : weight of that irregular non rectangular sampling. The smaller it is, the more regular the sampling
@@ -45,6 +46,9 @@ def phase_space(system, param, xmin, xmax, pmin, pmax, nx, np, nper,
     if sampling_density == 'asig':
         vect_x = asig_sampling(linspace(xmin, xmax, nx), amp=sampling_amp)
         vect_p = asig_sampling(linspace(pmin, pmax, np), amp=sampling_amp)
+    elif sampling == 'rand':
+        vect_x = [xmin + random()*(xmax-xmin) for _ in range(nx)]
+        vect_p = [pmin + random()*(pmax-pmin) for _ in range(np)]
     else:
         vect_x = linspace(xmin, xmax, nx)
         vect_p = linspace(pmin, pmax, np)
@@ -64,7 +68,7 @@ def phase_space(system, param, xmin, xmax, pmin, pmax, nx, np, nper,
                     xtot[index_x, :] = wsol[0]
                 ptot[index_x, :] = wsol[1]
                 index_x += 1
-    elif sampling == 'rect':
+    elif sampling in ['rect', 'rand']:
         xtot, ptot = zeros((nx * np, int(nper * ndt))), zeros((np * nx, int(nper * ndt)))
         for x_0i in vect_x:
             index_p = 0
@@ -105,4 +109,4 @@ def stroboscopic(x, p, strob_step, t0=0):
     t0: a float, the starting point of the stroboscopic observation as a fraction of strob_step : 0 <= t0 < 1
     """
 
-    return x[:, t0*strob_step::strob_step], p[:, t0*strob_step::strob_step]
+    return x[:, round(t0*strob_step)::strob_step], p[:, round(t0*strob_step)::strob_step]

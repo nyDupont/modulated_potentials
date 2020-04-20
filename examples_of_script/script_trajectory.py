@@ -1,6 +1,7 @@
-from numpy import linspace
+from numpy import linspace, pi
 import matplotlib.pyplot as plt
 from utils.physics_systems import *
+from utils.utils import *
 
 bool_latex_style = 1  # for the plot to be edited in latex serif
 bool_title = 1  # to display a figure title with parameters
@@ -17,10 +18,11 @@ a, dphi = 1, pi/2
 x0, p0 = 0, 0
 
 # time vector
-nper = 1
+t0 = 0
+nper = 10
 ndt = 1000
 tf = nper*2*pi  # dimensionless final time
-vect_t = linspace(0, tf, nper*ndt)  # time vector
+vect_t = linspace(t0, t0+tf, nper*ndt)  # time vector
 
 # solving the DE
 x_sol, p_sol = resolution(system, (x0, p0), vect_t, (g, eps, phi, a, dphi))
@@ -62,7 +64,7 @@ plt.ylabel('momentum')
 left, right = plt.xlim()
 bottom, top = plt.ylim()
 w, h = right-left, top-bottom
-plt.text(left+0.05*w, top-0.1*h, 'a', horizontalalignment='left', verticalalignment='baseline', weight='bold')
+plt.text(left+0.05*w, top-0.1*h, 'b', horizontalalignment='left', verticalalignment='baseline', weight='bold')
 plt.grid()
 
 axes3 = fig.add_subplot(133)
@@ -72,13 +74,14 @@ plt.ylabel('mechanical energy')
 left, right = plt.xlim()
 bottom, top = plt.ylim()
 w, h = right-left, top-bottom
-plt.text(left+0.05*w, top-0.1*h, 'a', horizontalalignment='left', verticalalignment='baseline', weight='bold')
+plt.text(left+0.05*w, top-0.1*h, 'c', horizontalalignment='left', verticalalignment='baseline', weight='bold')
 plt.grid()
 
 if bool_title:
     str_dphi = str(int(10*dphi/pi)/10) + r'\pi'
     g_rounded, eps_rounded, phi_rounded = round(100*g)/100, round(100*eps)/100, round(100*phi)/100
-    plt.suptitle(r"$n_{per}$" + r" = {} ; $a$ = {} ; $\Delta \phi = {}$".format(a, nper, str_dphi)
+    plt.suptitle(r"$n_{per} = $" + str(nper) + r' ; $\omega_\mathrm{amp}/\omega_\mathrm{phase}$ = ' +
+                 r"{} ; $\Delta \phi = {}$".format(a, str_dphi)
                  + "\n" + r"$\gamma$ = {} ; $\epsilon$ = {} ; $\phi$ = {}"
                  .format(g_rounded, eps_rounded, phi_rounded))
 

@@ -1,7 +1,8 @@
-from numpy import linspace
+from numpy import linspace, pi, array
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 from utils.energy_minimization import *
+from utils.utils import *
 
 bool_latex_style = 1  # for the plot to be edited in latex serif
 bool_title = 1  # to display a figure title with parameters
@@ -11,13 +12,14 @@ minimization_method = 'nelder-mead'
 
 # parameters for the minimization algorithm
 # g, eps, phi = 0.3, 0.6, 2  # initial guess
-g, eps, phi = 0.7, 0.2, 2.5
+g, eps, phi = 0.5, 0.6, 1.8
 # fixed parameters
 a, dphi = 1, pi/2
 
 # time vector
 nper, ndt = 1, 200
-vect_t = linspace(0, nper*2*pi, nper*ndt)
+t0 = 0
+vect_t = linspace(t0, t0 + nper*2*pi, nper*ndt)
 
 
 # mechanical energy minimization # (see utils.utils.py)
@@ -88,7 +90,7 @@ plt.grid()
 if bool_title:
     str_dphi = str(int(10*dphi/pi)/10) + r'\pi'
     g_rounded, eps_rounded, phi_rounded = round(1000*g_res)/1000, round(1000*eps_res)/1000, round(1000*phi_res)/1000
-    plt.suptitle(r"$n_{per}$" + r" = {} ; $a$ = {} ; $\Delta \phi = {}$".format(a, nper, str_dphi)
+    plt.suptitle(r"$n_{per}$" + r" = {} ; $a$ = {} ; $\Delta \phi = {}$".format(nper, a, str_dphi)
                  + "\n" + r"$\gamma$ = {} ; $\epsilon$ = {} ; $\phi$ = {}"
                  .format(g_rounded, eps_rounded, phi_rounded))
 

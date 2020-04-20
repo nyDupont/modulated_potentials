@@ -1,9 +1,10 @@
-from numpy import linspace
+from numpy import linspace, pi
 import matplotlib.pyplot as plt
 from scipy.integrate import simps
 from utils.physics_systems import *
+from utils.utils import *
 
-bool_title =1
+bool_title = 1
 bool_latex_style = 1
 
 # system

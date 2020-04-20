@@ -1,6 +1,7 @@
-from numpy import linspace
+from numpy import linspace, max, pi, zeros
 import matplotlib.pyplot as plt
 from utils.physics_systems import *
+from utils.utils import *
 
 bool_latex_style = 1  # for the plot to be edited in latex serif
 bool_show = 1
@@ -14,17 +15,19 @@ system = pendulum_amp_phase_mod_adim
 
 # parameters
 g, eps, phi = 0.79, 0.27, 2.7  # works for a = 1, dphi = pi/2
-a, dphi = 1, pi/2
+# g, eps, phi = [0.3180273890371874, 0.22238020961614763, 1.8606289037795292]
+a, dphi = 1, +pi/2
 param = g, eps, phi
 
 xpv_space_frequency = 2  # ploting a position or momentum or potential point every xpv_frame_freq
 time_frame_frequency = 8  # idem in time
 
 # time vector
-nper = 3
+nper = 6
 ndt = 1000  # plays here a special role on animation speed
 tf = nper*2*pi  # dimensionless final time
-vect_t = linspace(0, tf, round(nper*ndt))  # time vector
+t0 = 0
+vect_t = linspace(t0, t0+tf, round(nper*ndt))  # time vector
 
 nb_space_points = 1000  # space sampling to plot the potential
 V = zeros((nb_space_points, round(nper*ndt)))  # definition of an array to store the V(x,t)
@@ -42,7 +45,7 @@ for i in range(round(nper*ndt)):
     V[:, i] = potential_amp_phase_mod_adim(vect_x, vect_t[i], (g, eps, phi, a, dphi))  # evalutaed in vect_x but to be plotted translated
 
 # definition of useful variables for the graphs
-x_0, p_0, v_0, v_max = x_sol_translated[0], p_sol[0], v_sol_adim[0], max(V[:, 0])
+x_0, p_0, v_0, v_max = x_sol_translated[0], p_sol[0], v_sol_adim[0], max(V)
 p_min, p_max = min(p_sol), max(p_sol)  # for scale
 
 # animation
