@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from phase_space.phase_space import *
+from utils.phase_space import *
 
 system = pendulum_amp_mod_adim  # physics system, see utils.physics_system
 bool_stroboscopic = True
@@ -19,11 +19,12 @@ tf, ndt = 100, 100
 xmodulo = 2*pi
 
 # computing phase space
-x, p = phase_space(system, (g, eps), x_min, x_max, p_min, p_max, nx, np, tf, ndt=ndt, stroboscopic=bool_stroboscopic,
+x, p = phase_space(system, (g, eps), x_min, x_max, p_min, p_max, nx, np, tf, ndt=ndt,
                    xmodulo=xmodulo, sampling='diag')
+x_strob, p_strob = stroboscopic(x, p, ndt)
 
 # graphs
-plt.scatter(x, p, s=0.2, color='k')
+plt.scatter(x_strob, p_strob, s=0.2, color='k')
 plt.xlim(-pi, pi)
 # ylim(-5, 6.1)
 plt.xlabel('x')
