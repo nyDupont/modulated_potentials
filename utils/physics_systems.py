@@ -23,12 +23,25 @@ def potential_ho(w, t, param):
 
 
 # Hamilton equations of the HO (mass m = 1)
-def oscillateur_harmonique_adim(w, t, param):
+def harmonic_oscillator_adim(w, t, param):
     x, p = w  # unpacking variables at time t
     omega = param  # unpacking potential parameter
 
     f = [p,
          -omega**2*x]
+    return f
+
+
+######################################
+# I: constant cosinusoidal potential #
+######################################
+# Hamilton equations of the simple pendulum (mass m = 1, cord length = 1)
+def simple_pendulum(w, t, param):
+    x, p = w  # unpacking variables at time t
+    k = param[0]  # unpacking potential parameter
+
+    f = [p,
+         -k**2*sin(x)]
     return f
 
 

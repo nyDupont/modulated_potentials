@@ -108,5 +108,4 @@ def stroboscopic(x, p, strob_step, t0=0):
                 periods, strob_step should be ndt
     t0: a float, the starting point of the stroboscopic observation as a fraction of strob_step : 0 <= t0 < 1
     """
-
-    return x[:, round(t0*strob_step)::strob_step], p[:, round(t0*strob_step)::strob_step]
+    return x[:, round(t0*strob_step)::round(strob_step)], p[:, round(t0*strob_step)::round(strob_step)]
