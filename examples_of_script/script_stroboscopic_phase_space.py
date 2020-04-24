@@ -20,7 +20,7 @@ nx, np = 23, 13
 nper, t0 = 2, 0
 tf, ndt = 100, 100
 
-# space regularity of the system
+# space periodicity of the system
 xmodulo = 2*pi
 
 # computing phase space
