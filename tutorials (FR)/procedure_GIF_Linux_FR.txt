@@ -1,0 +1,27 @@
+Commande terminal pour la création d'un fichier .gif à partir d'images .png :
+
+Prérequis : 
+1- Avoir généré les images depuis le programme (régler les paramètres dans le fichier paramètres.py puis lancer le code animation.py)
+2- Ouvrir un terminal et se déplacer dans le dossier dans lequel sont stockées les images (temporalRatchet/gif/pictures/ dans mon cas ; à partir de l'endroit où se trouve le dossier temporalRatchet).
+
+
+Sous linux, la commande (générale) pour la création d'un .gif à partir d'images au format .png est :
+
+	convert $(for ((a=indice_initial; a<=indice_final; a++)); do printf -- "-delay temps_delai nom_image%s.png " $a; done;) ../nom_gif.gif
+
+
+où il y a 5 paramètres à particulariser :
+
+1- indice_initial : le point de départ de la boucle. Il correspond à l'indice de la première image (0 selon mon programme).
+2- indice_final : le point final de la boucle. Il correspond à l'indice de la dernière image. Il faut donc vérifier le nombre d'image créées dans le dossier gif/source_pictures/ (indice_final = 375 dans mon cas). Ce nombre dépend des paramètres temporels du programme (e.g. nombre de périodes, discretisation temporelle pour le calcul, fréquence d'acquisition des images, etc.).
+3- temps_delai : le delai entre deux images (en centisecondes). Il s'agit de trouver un bon compromis pour que l'animation n'aille pas trop vite ni qu'elle soit trop saccadée (delai = 3 dans mon cas).
+4- nom_image : le nom de l'image avant l'indice (nom_image = picture_ dans mon cas)
+5- nom_gif : le nom que l'on souhaite donner au gif créé (../temporalRatchet dans mon cas, précédé de "../" afin que le fichier soit créé dans le dossier parent, soit gif/)
+
+
+Pour moi, la commande est donc :
+
+	convert $(for ((a=0; a<=375; a++)); do printf -- "-delay 3 picture_%s.png " $a; done;) ../temporalRatchet.gif
+
+
+
