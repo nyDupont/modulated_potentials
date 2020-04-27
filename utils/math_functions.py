@@ -21,3 +21,14 @@ def asig_sampling(vect, amp=1.):  # non uniform inverse-sigmoidal sampling of th
     asig_scaled_offset = asig(x) / 2 / max(asig(x)) + 0.5  # new asig : ]0;1[ -> [0, 1]
 
     return array([v_i + (v_f - v_i) * i for i in asig_scaled_offset])
+
+
+# def true_div(a, b):
+# super sketchy
+#     c = []
+#     for i in range(len(a)):
+#         if a[i] == 0 and b[i] == 0:
+#             c.append(1)
+#         else:
+#             c.append(a[i]/b[i])
+#     return array(c)
