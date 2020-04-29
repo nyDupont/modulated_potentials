@@ -1,16 +1,12 @@
-from numpy import linspace, pi, zeros
+from numpy import linspace, zeros
 from random import random
 from integrators.rk4 import rk4
 from utils.utils import resolution
-from utils.math_functions import asig_sampling
 
 
-def phase_space(system, param, xmin, xmax, pmin, pmax, nx, np, nper,
-                ndt=200, integrator=rk4, xmodulo=None, pmodulo=None,
-                sampling='rect', sampling_density='const', sampling_amp=1):
+def phase_space(system, param, vect_ic, vect_t, integrator=rk4, xmodulo=None, pmodulo=None):
     """
-    phase_space(system, param, xmin, xmax, pmin, pmax, nx, np, nper, ndt=200, integrator=rk4, xmodulo=None,
-                pmodulo=None, sampling='rect', sampling_density='const', sampling_amp=1)
+    phase_space(system, param, vect_ic, nper, ndt=200, integrator=rk4, xmodulo=None, pmodulo=None)
 
     Return a tuple of two numpy arrays x and p to be plotted in a phase space (PS). Both are of shape
     (nx*np, nper*ndt).
@@ -20,73 +16,68 @@ def phase_space(system, param, xmin, xmax, pmin, pmax, nx, np, nper,
     system : function the integrator will numerically solve. Has to be previously defined returning Hamilton equations
              in my case,
     param : tuple of param passed to the system (e.g. the frequency omega if system is the harmonic oscillator),
-    xmin, xmax, pmin, pmax : floats bounding the rectangular sampling of initial conditions (IC) of the PS,
-    nx, np : ints of how many IC are to be computed along x- and p-axis,
-    nper : int, number of periods of modulation to check,  |  This has been programmed to obtain the PS of a system
-    ndt : step times by periods,                           |  modulated in time. Anyway, for each IC, simulation
-                                                           |  is of duration (nper*2*pi) and (nper*ndt) discretized.
+    vect_ic : python iterable of tuples (x_i, p_i), the set of initial conditions under which the trajectories will be
+              plotted,
+    vect_t : python iterable, being the time vector along |  This has been programmed to obtain the PS of a system
+             which the system is integrated,              |  modulated in time. Anyway, for each IC, simulation
+                                                          |  is of duration (nper*2*pi) and (nper*ndt) discretized.
     integrator : function, numerical integrator to be used,
-                (i.e. the angle of the Poincaré section intersecting the phase space torus in the (x, p, t) space.)
     xmodulo, pmodulo : floats to be specified if one wants to fold the PS on itself, for instance when the system is
                        xmodulo-periodic in x and/or pmodulo-periodic in p (i.e. invariant by such discrete translations)
-                       along those axis, Note: has not yet been implemented along the p-axis.
-    sampling : string, ['rect', 'diag', 'rand']
-    sampling_density : string, to switch from a constant sampling density to a arc-sigmoidal sampling density, getting
-                       more CI arround the center of the PS. Options are ['const', 'asig'],
-    sampling_amp : weight of that irregular non rectangular sampling. The smaller it is, the more regular the sampling
-                   is.
+                       along those axis, Note: yet to be implemented along the p-axis.
 
     About x and p returned by the function : the first dimension is the number of initial conditions computed and the
     second dimension is the common length of each trajectory.
     """
-    # defining the time vector
-    tmax = nper * 2 * pi
-    vect_time = linspace(0, tmax, nper*ndt)
-
-    if sampling_density == 'asig':
-        vect_x = asig_sampling(linspace(xmin, xmax, nx), amp=sampling_amp)
-        vect_p = asig_sampling(linspace(pmin, pmax, np), amp=sampling_amp)
-    elif sampling == 'rand':
-        vect_x = [xmin + random()*(xmax-xmin) for _ in range(nx)]
-        vect_p = [pmin + random()*(pmax-pmin) for _ in range(np)]
-    else:
-        vect_x = linspace(xmin, xmax, nx)
-        vect_p = linspace(pmin, pmax, np)
+    n_ic = len(vect_ic)
+    n_t = len(vect_t)
     # computing the trajectories, solutions of the diff. eq. (DE) for each IC
-    index_x = 0
-    if sampling == 'diag':
-        xtot, ptot = zeros((nx, int(nper * ndt))), zeros((np, int(nper * ndt)))
-        for x_0i in vect_x:
-            if sampling == 'diag':
-                p_0i = vect_p[index_x]
-                print('{}/{}'.format(index_x+1, nx))
-                wsol = resolution(system, (x_0i, p_0i), vect_time, param, integrateur=integrator)
-                if xmodulo is not None:
-                    xtot[index_x, :] = \
-                        [((x_j + 0.5 * xmodulo) % xmodulo) - 0.5 * xmodulo for x_j in wsol[0]]
-                else:
-                    xtot[index_x, :] = wsol[0]
-                ptot[index_x, :] = wsol[1]
-                index_x += 1
-    elif sampling in ['rect', 'rand']:
-        xtot, ptot = zeros((nx * np, int(nper * ndt))), zeros((np * nx, int(nper * ndt)))
-        for x_0i in vect_x:
-            index_p = 0
-            for p_0i in vect_p:
-                progression = index_p + index_x*np
-                print('{}/{}'.format(progression, nx*np))
-                # numerical integration for a IC (x_0i, p_0i)
-                wsol = resolution(system, (x_0i, p_0i), vect_time, param, integrateur=integrator)
-                # gathering results in the same cell if the system is xmodulo-periodic along the x-axis
-                if xmodulo is not None:
-                    xtot[progression, :] = \
-                        [((x_j+0.5*xmodulo) % xmodulo) - 0.5*xmodulo for x_j in wsol[0]]
-                else:
-                    xtot[progression, :] = wsol[0]
-                ptot[progression, :] = wsol[1]
-                index_p += 1
-            index_x += 1
+    progression = 0
+    xtot, ptot = zeros((n_ic, n_t)), zeros((n_ic, n_t))
+    for ic in vect_ic:
+        print('computing initial condition {}/{}...'.format(progression + 1, n_ic))
+        # numerical integration for a IC (x_0i, p_0i)
+        wsol = resolution(system, (ic[0], ic[1]), vect_t, param, integrator=integrator)
+        # gathering results in the same cell if the system is xmodulo-periodic along the x-axis
+        if xmodulo is not None:
+            xtot[progression, :] = modulo_zcentered(wsol[0], xmodulo)
+        else:
+            xtot[progression, :] = wsol[0]
+        ptot[progression, :] = wsol[1]
+        progression += 1
     return xtot, ptot
+
+
+def rect_sampling(xmin, xmax, pmin, pmax, nx, np):
+    x, p = linspace(xmin, xmax, nx), linspace(pmin, pmax, np)
+    res = []
+    for i in x:
+        for j in p:
+            res.append((i, j))
+    return res
+
+
+def rand_sampling(xmin, xmax, pmin, pmax, n):
+    res = []
+    dx, dp = xmax-xmin, pmax-min
+    for i in range(n):
+        x, p = xmin+random()*dx, pmin+random()*dp
+        res.append((x, p))
+    return res
+
+
+def modulo_zcentered(vect, modulo):
+    """
+    Modulo zero centered : modulo_zcentered(vect, modulo)
+
+    Return vect folded on itself, centered around zero and with periodicity modulo
+
+    Parameters
+    ----------
+    vect: iterable to fold
+    modulo: float, desired periodicity
+    """
+    return [((element+0.5*modulo) % modulo)-0.5*modulo for element in vect]
 
 
 def stroboscopic(x, p, strob_step, t0=0):
@@ -107,5 +98,6 @@ def stroboscopic(x, p, strob_step, t0=0):
                 t = numpy.linspace(t0, tf, ndt*tf) going from t0 to tf periods with ndt the number of time step by
                 periods, strob_step should be ndt
     t0: a float, the starting point of the stroboscopic observation as a fraction of strob_step : 0 <= t0 < 1
+        (i.e. the angle of the Poincaré section intersecting the phase space torus in the (x, p, t) space.)
     """
     return x[:, round(t0*strob_step)::round(strob_step)], p[:, round(t0*strob_step)::round(strob_step)]

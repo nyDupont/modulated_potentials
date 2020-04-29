@@ -1,4 +1,5 @@
 from integrators.rk4 import rk4
+import datetime as dt
 
 # useful miscellaneous functions
 
@@ -38,6 +39,21 @@ def decimals(x, n, trunc=False):
     trunc: boolean, to be set to True if one wants x to be returned truncated and not rounded.
     """
     if trunc:
-        return int(10**n*x)/10**n
+        x = int(10**n*x) / 10**n
+        if x % 1 == 0:
+            x = int(x)  # not to return 'int(x).0'
+        return x
     else:
-        return round(10**n*x)/10**n
+        x = round(10**n*x) / 10**n
+        if x % 1 == 0:
+            x = int(x)  # not to return 'round(x).0'
+        return x
+
+
+def str_yyyymmdd():
+    """
+    str_yyyymmdd()
+
+    Return a string of the current date written as 'yyyymmdd'. Used to save results in properly organized directories.
+    """
+    return str(dt.datetime.now().date()).replace('-', '')
