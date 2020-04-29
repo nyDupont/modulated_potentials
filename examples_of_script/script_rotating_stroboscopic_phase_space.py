@@ -17,19 +17,19 @@ x0, p0 = 0, 0
 highlighted_marker_size = 150
 
 # parameters
-g, eps, phi = 0.32, 0.22, 1.86
+g, eps, phi = [1.1869160180292213, 0.2756995577344605, 1.718139099894072]
 a, dphi = 1, pi/2
 param = g, eps, phi, a, dphi
 
 # x, p sampling boundaries and amount of initial conditions
 x_min, x_max = -pi, pi
 p_min, p_max = -2, 2
-nx, np = 23, 13
+nx, np = 19, 9
 
 # variables to generate time vector
-nper, t0 = 2, 0  # nper is the number of periods of modulation for the ratchet to be functional
-strob_obs = 0.5  # the system is stroboscopically monitored every (nper*strob_obs)*ndt
-tf, ndt = 200*strob_obs, 100
+nper, t0 = 1, 0  # nper is the number of periods of modulation for the ratchet to be functional
+strob_obs = 1  # the system is stroboscopically monitored every (nper*strob_obs)*ndt
+tf, ndt = 100*strob_obs, 100
 
 # space periodicity of the system
 xmodulo = 2*pi

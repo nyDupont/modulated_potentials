@@ -89,7 +89,7 @@ plt.legend(prop={'size': 9})
 if bool_title:
     str_dphi = str(int(10*dphi/pi)/10) + r'\pi'
     g_rounded, eps_rounded, phi_rounded = round(100*g)/100, round(100*eps)/100, round(100*phi)/100
-    plt.suptitle(r"$n_{per}$" + r" = {} ; $a$ = {} ; $\Delta \phi = {}$".format(a, nper, str_dphi)
+    plt.suptitle(r"$n_\mathrm{per}$" + r" = {} ; $a$ = {} ; $\Delta \phi = {}$".format(a, nper, str_dphi)
                  + "\n" + r"$\gamma$ = {} ; $\epsilon$ = {} ; $\phi$ = {}"
                  .format(g_rounded, eps_rounded, phi_rounded))
 

@@ -12,12 +12,12 @@ minimization_method = 'nelder-mead'
 
 # parameters for the minimization algorithm
 # g, eps, phi = 0.3, 0.6, 2  # initial guess
-g, eps, phi = 0.5, 0.6, 1.8
+g, eps, phi = 1, 0.4, 4
 # fixed parameters
 a, dphi = 1, pi/2
 
 # time vector
-nper, ndt = 1, 200
+nper, ndt = 1, 500
 t0 = 0
 vect_t = linspace(t0, t0 + nper*2*pi, nper*ndt)
 
