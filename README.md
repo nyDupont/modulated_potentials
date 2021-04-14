@@ -4,3 +4,5 @@ Code to simulate the dynamics of a particle (/its wavefunction) in a modulated p
 ------------
 
 ![alt text](https://github.com/nyDupont/modulated_potentials/blob/master/images/temporalRatchet_1.gif)
+
+12/04/21: ça marche lol 
